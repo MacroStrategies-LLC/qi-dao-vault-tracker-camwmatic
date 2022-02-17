@@ -16,8 +16,15 @@
  * hello
  */
 
+import 'dotenv/config';
+import {ethers} from 'ethers';
+import provider from './provider/provider.js';
 const boiler = (example) => {
+  console.log('boiler');
+  // console.log(provider);
   return example;
 };
+
+boiler();
 
 export default boiler;

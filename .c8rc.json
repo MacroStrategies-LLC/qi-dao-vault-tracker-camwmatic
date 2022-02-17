@@ -1,6 +1,6 @@
 {
   "all": true,
-  "include": ["src"],
+  "include": ["src/*"],
   "reporter": ["html","text"],
   "lines": 100,
   "branches": 100,
