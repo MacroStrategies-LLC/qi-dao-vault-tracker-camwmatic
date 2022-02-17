@@ -1,6 +1,7 @@
 {
   "all": true,
   "include": ["src/*"],
+  "exclude": ["src/abi"],
   "reporter": ["html","text"],
   "lines": 100,
   "branches": 100,

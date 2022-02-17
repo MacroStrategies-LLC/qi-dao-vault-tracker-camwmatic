@@ -17,12 +17,35 @@
  */
 
 import 'dotenv/config';
+import fetch from 'node-fetch';
 import {ethers} from 'ethers';
-import provider from './provider/provider.js';
-const boiler = (example) => {
-  console.log('boiler');
-  // console.log(provider);
-  return example;
+import abi from '#src/abi/abi.js';
+import addresses from '#src/addresses/addresses.js';
+import provider from '#src/providers/providers.js';
+import wallet from '#src/wallet/wallet.js';
+
+/** returns the whole interger of collateral/debt aka cdr*/
+const getVaultCDR = async (id, contract) => {
+  const cdr = await contract.checkCollateralPercentage(id);
+  return ethers.utils.formatUnits(cdr, 0);
+};
+
+const getGas = async () => {
+  const url = `https://api.polygonscan.com/api?module=gastracker&action=gasoracle&apikey=${process.env.polygon_scan}`;
+  const response = await fetch(url);
+  return response.json();
+};
+
+const boiler = async (example) => {
+  const vault = new ethers.Contract(
+      addresses.vaults.camwmatic,
+      abi.vaults.camwmatic,
+      wallet,
+  );
+  const vaultCDR = await getVaultCDR(process.env.vault, vault);
+  const gas = await getGas();
+  console.log(vaultCDR);
+  console.log(gas);
 };
 
 boiler();
