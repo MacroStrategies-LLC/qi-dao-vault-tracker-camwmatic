@@ -1,0 +1,9 @@
+coverage
+docs
+node_modules
+*.csv
+.env
+.vscode
+.zip
+.DS_store
+*.terraform

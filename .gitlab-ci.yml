@@ -1,0 +1,35 @@
+image: node:16-alpine
+
+stages:
+  - build
+  - upload
+  - deploy
+
+.somejob:
+  script:
+    - echo ls
+
+build:
+  extends: .somejob
+  stage: build
+  script:
+    - echo ls
+    - echo success
+  artifacts:
+    paths:
+    - src/index.js
+
+upload:
+  extends: .somejob
+  stage: upload
+  script:
+    - echo ls
+    - echo success
+
+upload:
+  extends: .somejob
+  stage: deploy
+  script:
+    - echo ls
+    - echo success
+  when: manual

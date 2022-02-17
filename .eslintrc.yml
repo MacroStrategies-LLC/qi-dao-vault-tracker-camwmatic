@@ -1,0 +1,25 @@
+env:
+  node: true
+  mocha: true
+extends: 
+  - eslint:recommended
+  - plugin:sonarjs/recommended
+  - plugin:unicorn/recommended
+  - plugin:mocha/recommended
+  - google
+plugins:
+  - sonarjs
+  - unicorn
+  - no-loops
+  - mocha
+parserOptions:
+  sourceType: module
+rules: 
+  no-loops/no-loops: 2
+  require-jsdoc : 0
+  unicorn/no-array-reduce: off
+  unicorn/prefer-object-from-entries: off
+overrides: 
+  - files: '*.spec.js'
+    rules: 
+        no-undef: 'off'

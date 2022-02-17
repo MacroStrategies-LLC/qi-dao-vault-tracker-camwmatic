@@ -1,0 +1,11 @@
+{
+  "all": true,
+  "include": ["src"],
+  "reporter": ["html","text"],
+  "lines": 100,
+  "branches": 100,
+  "statements": 100,
+  "per-file": 100,
+  "check-coverage": true,
+  "clean": true
+}

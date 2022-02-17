@@ -1,0 +1,10 @@
+{
+    "source": {
+        "include": ["src"]
+    },
+    "opts": {
+        "destination": "docs",
+        "template": "node_modules/jsdoc-baseline",
+        "readme": "README.md"
+    }
+}
