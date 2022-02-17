@@ -33,7 +33,11 @@ const getVaultCDR = async (id, contract) => {
 const getGas = async () => {
   const url = `https://api.polygonscan.com/api?module=gastracker&action=gasoracle&apikey=${process.env.polygon_scan}`;
   const response = await fetch(url);
-  return response.json();
+  const json = await response.json();
+  return {
+    gasPrice: ethers.utils.parseUnits(json.result.FastGasPrice, 'gwei'),
+    gasLimit: 500_000,
+  };
 };
 
 const boiler = async (example) => {
