@@ -1,7 +1,3 @@
-/**
- * @module vaults
- */
-
 import {ethers} from 'ethers';
 import abi from '#src/abi/abi.js';
 import addresses from '#src/addresses/addresses.js';
