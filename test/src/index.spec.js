@@ -1,5 +1,3 @@
-import handler from '#src/index.js';
-
 describe('src/index', function() {
   describe('index', function() {
     it('should take two parameters and return a status', async function() {
