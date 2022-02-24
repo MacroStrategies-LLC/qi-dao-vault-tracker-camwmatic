@@ -57,8 +57,11 @@ const estimateAvailableDebt = (debtCeiling, oraclePrice) => {
   return (Number(debtCeiling) * Number(oraclePrice)).toString();
 };
 
-const createState = async (id, address, abi, wallet) => {
-  const contract = await createContract(address, abi, wallet);
+const createState = async () => {
+  const id = process.env.vault;
+  const address = addresses.vaults.camwmatic;
+  const vaultABI = abi.vaults.camwmatic;
+  const contract = await createContract(address, vaultABI, wallet);
   const oraclePrice = await getEthPriceSource(contract);
   const collateralQuantity = await getVaultCollateral(id, contract);
   const vaultDebtValue = await getVaultDebt(id, contract);
@@ -85,10 +88,6 @@ const vaults = {
   getDebtCeiling,
   estimateAvailableDebt,
   createState,
-  state: await createState(process.env.vault,
-      addresses.vaults.camwmatic,
-      abi.vaults.camwmatic,
-      wallet),
 };
 
 export default vaults;
