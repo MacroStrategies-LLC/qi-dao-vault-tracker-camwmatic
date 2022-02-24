@@ -9,24 +9,9 @@ import abi from '#src/abi/abi.js';
 import addresses from '#src/addresses/addresses.js';
 import provider from '#src/providers/providers.js';
 import wallet from '#src/wallet/wallet.js';
-
-/** gets the debt to collateral value of the vault
- * @param {number} id
- * @param {contract} contract {@link https://docs.ethers.io/v5/search/?search=contract}
- * @return {string} cdr = collateral value/debt value*/
-const getVaultCDR = async (id, contract) => {
-  const cdr = await contract.checkCollateralPercentage(id);
-  return ethers.utils.formatUnits(cdr, 0);
-};
-
-/** gets the collateral value of the vault
- * @param {number} id
- * @param {contract} contract {@link https://docs.ethers.io/v5/search/?search=contract}
- * @return {string} collateral value in usd */
-const getVaultDebt = async (id, contract) => {
-  const debt = await contract.vaultDebt(id);
-  return ethers.utils.formatUnits(debt, 18);
-};
+import vaults from '#src/vaults/vaults.js';
+import routers from '#src/routers/routers.js';
+import tokens from '#src/tokens/tokens.js';
 
 /** creates an overrides object to be used in transactions
  * @return {object} overrides {@link https://docs.ethers.io/v5/search/?search=contract}
@@ -36,48 +21,82 @@ const getGas = async () => {
   const url = `https://api.polygonscan.com/api?module=gastracker&action=gasoracle&apikey=${process.env.polygon_scan}`;
   const response = await fetch(url);
   const json = await response.json();
+  // const increaseGas = String(Number(json.result.FastGasPrice) * 2);
+  // const increaseGas = String(100);
+  // console.log('fastGasPrice', json.result.FastGasPrice);
   return {
+    // gasPriceGwei: json.result.FastGasPrice,
     gasPrice: ethers.utils.parseUnits(json.result.FastGasPrice, 'gwei'),
-    gasLimit: 500_000,
-    polygonScanTokenPrice: json.result.UsdPrice,
+    // maxFeePerGas: ethers.utils.parseUnits(json.result.FastGasPrice, 'gwei'),
+    // maxPriorityFeePerGas: ethers.utils.parseUnits(json.result.FastGasPrice, 'gwei'),
+    gasLimit: 8_000_000,
+    // polygonScanTokenPrice: json.result.UsdPrice,
+    // nonce: 595,
   };
 };
 
-/** gets the amount of tokens aka collateral from a vault
- * @param {number} id
- * @param {contract} contract {@link https://docs.ethers.io/v5/search/?search=contract}
- * @return {string} collateral quantity */
-const getVaultCollateral = async (id, contract) => {
-  const tokens = await contract.vaultCollateral(id);
-  return ethers.utils.formatUnits(tokens, 18);
-};
+const state = vaults.state;
+const gas = await getGas();
+// state.readableGas = {
+//   gasPrice: gas.gasPrice.toString(),
+//   gasPriceGwei: gas.gasPriceGwei,
+//   gasLimit: gas.gasLimit,
+//   polygonScanTokenPrice: gas.polygonScanTokenPrice,
+// };
+// state.overrides = {
+// maxFeePerGas: ethers.utils.parseUnits('500', 'gwei'),
+// maxPriorityFeePerGas: ethers.utils.parseUnits('500', 'gwei'),
+// gasPrice: gas.gasPrice,
+// gasLimit: gas.gasLimit,
+// };
 
-/** gets the price per token from the contract, set via oracle
- * @param {contract} contract {@link https://docs.ethers.io/v5/search/?search=contract}
- * @return {string} value per token in currency form */
-const getEthPriceSource = async (contract) => {
-  const price = await contract.getEthPriceSource();
-  return ethers.FixedNumber.fromValue(price, 8)._value;
-};
+// const test = tokens;
+// console.log(test);
+// const test = routers.test;
+// console.log(test);
+// console.log(routers.amount('10', tokens.mai));
+// const test = routers.amount('10', tokens.mai);
+// console.log(test.wrapped);
+// const amount = routers.amount('1', tokens.mai);
+// const route = await routers.getRoute(amount, tokens.usdc, wallet);
+// // const [details] = route;
+// console.log(details);
+// console.log(Object.keys(route));
+// [
+//   'quote',
+//   'quoteGasAdjusted',
+//   'estimatedGasUsed',
+//   'estimatedGasUsedQuoteToken',
+//   'estimatedGasUsedUSD',
+//   'gasPriceWei',
+//   'route',
+//   'trade',
+//   'methodParameters',
+//   'blockNumber'
+// ]
+// console.log(JSON.stringify(route.route));
+// const transaction =
+// await routers.createTransaction('1', tokens.mai, tokens.usdc, wallet);
 
-const boiler = async (example) => {
-  const vault = new ethers.Contract(
-      addresses.vaults.camwmatic,
-      abi.vaults.camwmatic,
-      wallet,
-  );
-  const oraclePrice = await getEthPriceSource(vault);
-  const collateral = await getVaultCollateral(process.env.vault, vault);
-  const vaultDebt = await getVaultDebt(process.env.vault, vault);
-  const vaultCDR = await getVaultCDR(process.env.vault, vault);
-  const gas = await getGas();
-  console.log(oraclePrice, typeof oraclePrice);
-  console.log(collateral, typeof collateral);
-  console.log(vaultCDR, typeof vaultCDR);
-  console.log(vaultDebt, typeof vaultDebt);
-  console.log(gas);
-};
+// // console.log(transaction);
+// const herewego = await wallet.sendTransaction(transaction, state.overrides);
+// console.log(herewego);
+// console.log(routers.createTransaction('1', tokens.mai, tokens.usdc, wallet));
+// const transaction =
+// await routers.createTransaction(
+//     '1', tokens.mai, tokens.usdc, wallet);
+// console.log(transaction);
+// const test = await wallet.sendTransaction(transaction);
+// console.log(test);
 
-boiler();
-
-export default boiler;
+// console.log(transaction.trade.swaps[0].path);
+// console.log(Object.values(transaction.trade));
+// console.log(Object.keys(transaction));
+// console.log('tp', transaction.tokenPath);
+// console.log('route', transaction.route);
+// const test =
+// console.log(state.overrides);
+console.log(state);
+// await routers.createTransaction('mai', 'usdc', '1.0', wallet, await gas, 558);
+// console.log(Object.keys(provider.alchemy));
+export default state;
